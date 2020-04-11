@@ -3,9 +3,11 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
+    "postinstall": "patch-package",
     "start": "node ./bin/www"
   },
   "dependencies": {
+    "@ijprest/kle-serial": "^0.15.1",
     "cookie-parser": "~1.4.4",
     "debug": "~2.6.9",
     "express": "~4.16.1",

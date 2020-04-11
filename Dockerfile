@@ -7,11 +7,11 @@ COPY .npmrc ./
 COPY patches/* ./patches/
 COPY package*.json ./
 
-RUN npm install patch-package --save-dev
+RUN npm install typescript patch-package --save-dev
 RUN npm install
 
 # Bundle app source
-COPY . .
+COPY kle-converter.js kle-converter.js
 
 EXPOSE 3000
-CMD [ "node", "./kle-converter" ]
+CMD [ "node", "kle-converter.js" ]

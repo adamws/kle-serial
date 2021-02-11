@@ -1,7 +1,11 @@
-# kle-serial-server
+# kle-serial
 
-Docker util tool for conversion json downloaded from [keyboard-layout-editor](http://www.keyboard-layout-editor.com/)
-to it's internal representation (for details see [kle-serial](https://github.com/ijprest/kle-serial))
+[https://adamws.github.io/kle-serial](https://adamws.github.io/kle-serial/)
+
+Webpage for converting json downloaded from [keyboard-layout-editor](http://www.keyboard-layout-editor.com/)
+to its internal representation.
+
+(for details see [kle-serial](https://github.com/ijprest/kle-serial))
 
 ## Features
 

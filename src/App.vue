@@ -15,13 +15,14 @@
 </template>
 
 <script>
-import KleConverter from '@/components/KleConverter.vue';
+import KleConverter from './components/KleConverter.vue';
+import githubIcon from "./assets/GitHub-Mark-32px.png";
 
 export default {
   name: 'App',
   data() {
     return {
-      githubIcon: require('./assets/GitHub-Mark-32px.png'),
+      githubIcon: githubIcon,
     }
   },
   components: {

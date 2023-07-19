@@ -21,6 +21,7 @@
 import FileSaver from 'file-saver';
 import { PrismEditor } from 'vue-prism-editor';
 import 'vue-prism-editor/dist/prismeditor.min.css';
+import { Serial as kle } from '@ijprest/kle-serial';
 
 // import highlighting library
 import { highlight, languages } from 'prismjs/components/prism-core';
@@ -54,7 +55,6 @@ export default {
     },
     uploadLayout() {
       this.convertedLayout = '';
-      var kle = require('@ijprest/kle-serial');
       let file = this.$refs.file.files[0];
 
       let reader = new FileReader();
@@ -68,7 +68,7 @@ export default {
         this.convertedLayoutFilename = file.name.replace(/\.[^/.]+$/, "");
         const result = evt.target.result;
         try {
-          const keyboard = kle.Serial.deserialize(JSON.parse(result));
+          const keyboard = kle.deserialize(JSON.parse(result));
           this.convertedLayout = JSON.stringify(keyboard, null, 2);
         } catch (error) {
           this.showFailAlert(error.toString());

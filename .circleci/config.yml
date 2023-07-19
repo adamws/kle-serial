@@ -6,6 +6,18 @@ jobs:
       - image: cimg/node:19.7.0
     steps:
       - checkout
+      - run: npm ci
+      - run:
+          name: Build with vite
+          command: |
+            npm run build
+      - persist_to_workspace:
+          root: .
+          paths:
+           - dist
+      - store_artifacts:
+          path: dist
+          destination: dist
 
 workflows:
   main:

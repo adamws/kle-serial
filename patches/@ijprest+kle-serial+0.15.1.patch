@@ -1,8 +1,27 @@
 diff --git a/node_modules/@ijprest/kle-serial/index.ts b/node_modules/@ijprest/kle-serial/index.ts
-index af8daf8..8847f5e 100755
+index 260c357..c6622e8 100644
 --- a/node_modules/@ijprest/kle-serial/index.ts
 +++ b/node_modules/@ijprest/kle-serial/index.ts
-@@ -104,6 +104,7 @@ export class Serial {
+@@ -91,6 +91,18 @@ export module Serial {
+     return ret;
+   }
+ 
++  function removeTrailingFalsyValues<T>(list: T[]): T[] {
++    let lastIndex = list.length - 1;
++
++    // Find the last index of a truthy value
++    while (lastIndex >= 0 && !list[lastIndex]) {
++      lastIndex--;
++    }
++
++    // Return a new array with only the truthy values
++    return list.slice(0, lastIndex + 1);
++  }
++
+   function deserializeError(msg, data?) {
+     throw "Error: " + msg + (data ? ":\n  " + JSON5.stringify(data) : "");
+   }
+@@ -102,6 +114,7 @@ export module Serial {
      // Initialize with defaults
      let current: Key = new Key();
      let kbd = new Keyboard();
@@ -10,7 +29,16 @@ index af8daf8..8847f5e 100755
      var align = 4;
  
      for (var r = 0; r < rows.length; ++r) {
-@@ -152,6 +153,16 @@ export class Serial {
+@@ -130,6 +143,8 @@ export module Serial {
+               if (newKey.textColor[i] == newKey.default.textColor)
+                 delete newKey.textColor[i];
+             }
++            newKey.textSize = removeTrailingFalsyValues(newKey.textSize)
++            newKey.textColor = removeTrailingFalsyValues(newKey.textColor)
+ 
+             // Add the key!
+             kbd.keys.push(newKey);
+@@ -150,6 +165,16 @@ export module Serial {
                );
              }
              if (item.r != null) current.rotation_angle = item.r;

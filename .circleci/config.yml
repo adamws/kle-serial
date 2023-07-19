@@ -18,6 +18,30 @@ jobs:
       - store_artifacts:
           path: dist
           destination: dist
+  deploy:
+    docker:
+      - image: cimg/base:2022.12
+    steps:
+      - attach_workspace:
+          at: .
+      - add_ssh_keys:
+          fingerprints:
+            - "14:0a:96:f9:4c:a8:21:ec:3d:73:a6:01:db:99:ce:f4"
+      - run:
+          name: Deploy to github pages
+          working_directory: dist
+          command: |
+            mkdir -p ~/.ssh
+            ssh-keyscan github.com >> ~/.ssh/known_hosts
+            mkdir .circleci
+            wget https://raw.githubusercontent.com/adamws/kle-serial/master/.circleci/config.yml -P .circleci
+            touch .nojekyll
+            git init --quiet
+            git config user.name "CircleCI"
+            git config user.email "${CIRCLE_PROJECT_USERNAME}@users.noreply.github.com"
+            git add -A
+            git commit -m "Deploy ${CIRCLE_SHA1}"
+            git push --force $CIRCLE_REPOSITORY_URL master:gh-pages
 
 workflows:
   main:
@@ -26,3 +50,9 @@ workflows:
           filters:
             branches:
               ignore: gh-pages
+      - deploy:
+          requires:
+            - build
+          filters:
+            branches:
+              only: master

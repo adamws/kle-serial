@@ -7,7 +7,8 @@
     "build": "vite build",
     "preview": "vite preview",
     "postinstall": "patch-package && cd node_modules/@ijprest/kle-serial && npm run build",
-    "lint": "eslint --ext .js,.vue --ignore-path .gitignore --fix src"
+    "lint": "eslint --ext .js,.vue --ignore-path .gitignore --fix src",
+    "format": "prettier . --write"
   },
   "dependencies": {
     "@ijprest/kle-serial": "git+https://github.com/ijprest/kle-serial.git",

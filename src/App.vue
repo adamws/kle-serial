@@ -1,29 +1,33 @@
 <template>
   <div id="app">
     <el-container>
-      <el-header style="height: 20px;">
+      <el-header style="height: 20px">
         <div>KLE converter</div>
       </el-header>
       <el-main>
         <KleConverter />
       </el-main>
       <el-footer>
-          <div><a href="https://github.com/adamws/kle-serial"><img :src="githubIcon"/></a></div>
+        <div>
+          <a href="https://github.com/adamws/kle-serial"
+            ><img :src="githubIcon"
+          /></a>
+        </div>
       </el-footer>
     </el-container>
   </div>
 </template>
 
 <script>
-import KleConverter from './components/KleConverter.vue';
+import KleConverter from "./components/KleConverter.vue";
 import githubIcon from "./assets/GitHub-Mark-32px.png";
 
 export default {
-  name: 'App',
+  name: "App",
   data() {
     return {
       githubIcon: githubIcon,
-    }
+    };
   },
   components: {
     KleConverter,
@@ -36,8 +40,8 @@ body {
   margin-top: 2%;
   padding-right: 5%;
   padding-left: 5%;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
+    "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -63,8 +67,8 @@ code {
   background-color: #b3e6ff;
 }
 
-.el-header, .el-footer {
+.el-header,
+.el-footer {
   text-align: center;
 }
-
 </style>

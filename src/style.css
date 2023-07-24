@@ -1,0 +1,141 @@
+:root {
+  font-family: Inter, Avenir, Helvetica, Arial, sans-serif;
+  font-size: 16px;
+  line-height: 24px;
+  font-weight: 400;
+
+  color-scheme: light dark;
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-text-size-adjust: 100%;
+
+  --backgroud-color-primary: #ffffff;
+  --text-primary-color: #000000;
+  --text-button-color: #ffffff;
+  --gray1-color: #f9f9f9;
+  --gray2-color: #ececec;
+  --main-theme-color: #409eff;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --backgroud-color-primary: #282828;
+    --text-primary-color: #ffffff;
+    --text-button-color: #ffffff;
+    --gray1-color: #7c6f64;
+    --gray2-color: #665c54;
+    --accent-color: #fabd2f;
+    --main-theme-color: #427b58;
+  }
+}
+
+a {
+  font-weight: 500;
+  text-decoration: inherit;
+}
+a:hover {
+  color: var(--accent-color);
+}
+
+a {
+  font-weight: 500;
+  text-decoration: inherit;
+}
+a:hover {
+  color: var(--accent-color);
+}
+
+body,
+html {
+  height: 100%;
+  width: 100%;
+  margin: 0;
+  background-color: var(--backgroud-color-primary);
+}
+
+h1 {
+  font-size: 3.2em;
+  line-height: 1.1;
+}
+
+button {
+  border-radius: 8px;
+  border: 1px solid transparent;
+  padding: 0.6em 1.2em;
+  font-size: 1em;
+  font-weight: 500;
+  font-family: inherit;
+  color: var(--text-button-color);
+  background-color: var(--main-theme-color);
+  cursor: pointer;
+  transition: border-color 0.25s;
+}
+
+select {
+  border-radius: 8px;
+  border: 2px solid var(--main-theme-color);
+  text-align: center;
+  font-size: 1em;
+  font-family: inherit;
+  color: var(--text-primary-color);
+  background-color: var(--gray2-color);
+  cursor: pointer;
+  padding: 0.6em;
+  margin: 0;
+  box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+}
+
+#modal-backdrop,
+#app {
+  display: grid;
+  height: 100%;
+  width: 96%;
+  min-width: 320px;
+  max-width: 1280px;
+  min-height: 100%;
+  box-sizing: border-box;
+  /*overflow-y: hidden;*/
+  margin: auto;
+  grid-auto-columns: 1fr;
+  grid-template-rows: 3em 1fr 1fr 3em;
+  grid-template-columns: 2fr 1fr;
+  gap: 20px 40px;
+  grid-template-areas:
+    "header header"
+    "up-left up-right"
+    "down-left down-right"
+    "footer footer";
+}
+
+.header {
+  grid-area: header;
+  margin: 10px;
+}
+
+.footer {
+  grid-area: footer;
+  text-align: center;
+}
+
+.up-left {
+  grid-area: up-left;
+}
+
+.up-right {
+  grid-area: up-right;
+}
+
+.down-left {
+  grid-area: down-left;
+}
+
+.down-right {
+  grid-area: down-right;
+}

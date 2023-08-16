@@ -101,17 +101,15 @@ select {
   max-width: 1280px;
   min-height: 100%;
   box-sizing: border-box;
-  /*overflow-y: hidden;*/
   margin: auto;
   grid-auto-columns: 1fr;
   grid-template-rows: 3em 1fr 1fr 3em;
-  grid-template-columns: 2fr 1fr;
   gap: 20px 40px;
   grid-template-areas:
-    "header header"
-    "up-left up-right"
-    "down-left down-right"
-    "footer footer";
+    "header"
+    "up"
+    "down"
+    "footer";
 }
 
 .header {
@@ -124,18 +122,3 @@ select {
   text-align: center;
 }
 
-.up-left {
-  grid-area: up-left;
-}
-
-.up-right {
-  grid-area: up-right;
-}
-
-.down-left {
-  grid-area: down-left;
-}
-
-.down-right {
-  grid-area: down-right;
-}

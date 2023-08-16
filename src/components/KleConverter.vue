@@ -1,11 +1,11 @@
 <script setup>
-import { reactive, ref } from "vue";
+import { computed, reactive, ref } from "vue";
 import FileSaver from "file-saver";
 import JsonEditorVue from "json-editor-vue";
 import * as kle from "@ijprest/kle-serial";
 
-const jsonEditorRef = ref();
-
+const editorsPanelRef = ref(null);
+const jsonEditorRef = ref(null);
 const mode = ref("text");
 
 const layout = ref({
@@ -16,6 +16,26 @@ const layout = ref({
 const keyboard = ref({
   json: undefined,
   text: JSON.stringify(kle.Serial.deserialize([]), null, 2),
+});
+
+const resize = reactive({
+  isActive: false,
+});
+
+const styleEditorPanel = reactive({
+  flexShrink: 1,
+  flexBasis: "0%",
+  overflowX: "scroll",
+});
+
+const styleLeftPanel = reactive({
+  flexGrow: 0.7,
+});
+
+const styleRightPanel = computed(() => {
+  return {
+    flexGrow: 1 - styleLeftPanel.flexGrow,
+  };
 });
 
 function showFailAlert(message) {
@@ -79,11 +99,21 @@ function getConvertedLayout() {
   });
   FileSaver.saveAs(blob, "keyboard-layout-internal.json");
 }
+
+function resizeMove(event) {
+  if (!resize.isActive) {
+    return false;
+  }
+  event.preventDefault();
+
+  let pointerRelativeXpos = event.clientX - editorsPanelRef.value.offsetLeft;
+  styleLeftPanel.flexGrow = pointerRelativeXpos / editorsPanelRef.value.clientWidth;
+}
 </script>
 
 <template>
-  <div class="up-left">
-    <div>
+  <div class="editors-panel" ref="editorsPanelRef">
+    <div :style="[styleEditorPanel, styleLeftPanel]">
       <JsonEditorVue
         ref="jsonEditorRef"
         class="json-editor"
@@ -93,44 +123,64 @@ function getConvertedLayout() {
         :main-menu-bar="true"
         :status-bar="true"
       />
+      <div>
+        <span style="display: flex; gap: 10px">
+          <button @click="triggerUpload">Upload JSON</button>
+          <input
+            type="file"
+            id="file"
+            ref="file"
+            accept=".json"
+            v-on:change="uploadLayout"
+            style="display: none"
+          />
+        </span>
+      </div>
     </div>
-    <div>
-      <span style="display: flex; gap: 10px">
-        <button @click="triggerUpload">Upload JSON</button>
-        <input
-          type="file"
-          id="file"
-          ref="file"
-          accept=".json"
-          v-on:change="uploadLayout"
-          style="display: none"
-        />
-      </span>
-    </div>
-  </div>
-  <div class="up-right">
-    <JsonEditorVue
-      class="json-editor"
-      v-model:mode="mode"
-      :content="keyboard"
-      :onChange="
-        (c) => {
-          keyboard = c;
-        }
-      "
-      :read-only="true"
-      :main-menu-bar="true"
-      :status-bar="true"
+    <div
+      class="center-panel"
+      @mousemove="resizeMove"
+      @mouseleave="resizeMove"
+      @mousedown="(event) => { event.preventDefault(); resize.isActive = true; }"
+      @mouseup="(event) => { resize.isActive = false; }"
     />
-    <div>
-      <button @click="getConvertedLayout">Download</button>
+    <div :style="[styleEditorPanel, styleRightPanel]">
+      <JsonEditorVue
+        class="json-editor"
+        v-model:mode="mode"
+        :content="keyboard"
+        :onChange="
+          (c) => {
+            keyboard = c;
+          }
+        "
+        :read-only="true"
+        :main-menu-bar="true"
+        :status-bar="true"
+      />
+      <div>
+        <button @click="getConvertedLayout">Download</button>
+      </div>
     </div>
   </div>
 </template>
 
 <style scoped>
-.json-editor {
+.editors-panel {
+  display: flex;
+  box-sizing: border-box;
+  min-width: 0;
   width: 100%;
-  height: 900px;
+}
+
+.center-panel {
+  width: 60px;
+  cursor: col-resize;
+}
+
+.json-editor {
+  height: 400px;
+  min-height: 0;
+  min-width: 0;
 }
 </style>

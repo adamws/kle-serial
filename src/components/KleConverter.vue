@@ -3,6 +3,7 @@ import { computed, reactive, ref } from "vue";
 import FileSaver from "file-saver";
 import JsonEditorVue from "json-editor-vue";
 import * as kle from "@ijprest/kle-serial";
+import KeyboardRender from "./KeyboardRender.vue";
 
 const editorsPanelRef = ref(null);
 const jsonEditorRef = ref(null);
@@ -13,6 +14,7 @@ const layout = ref({
   text: undefined,
 });
 
+const keys = ref([]);
 const keyboard = ref({
   json: undefined,
   text: JSON.stringify(kle.Serial.deserialize([]), null, 2),
@@ -71,6 +73,7 @@ function onLayoutChange() {
       }
     });
     keyboard.value.text = JSON.stringify(k, null, 2);
+    keys.value = k.keys;
   }
 }
 
@@ -107,61 +110,76 @@ function resizeMove(event) {
   event.preventDefault();
 
   let pointerRelativeXpos = event.clientX - editorsPanelRef.value.offsetLeft;
-  styleLeftPanel.flexGrow = pointerRelativeXpos / editorsPanelRef.value.clientWidth;
+  styleLeftPanel.flexGrow =
+    pointerRelativeXpos / editorsPanelRef.value.clientWidth;
 }
 </script>
 
 <template>
-  <div class="editors-panel" ref="editorsPanelRef">
-    <div :style="[styleEditorPanel, styleLeftPanel]">
-      <JsonEditorVue
-        ref="jsonEditorRef"
-        class="json-editor"
-        v-model:mode="mode"
-        :content="layout"
-        :onChange="onLayoutChange"
-        :main-menu-bar="true"
-        :status-bar="true"
-      />
-      <div>
-        <span style="display: flex; gap: 10px">
-          <button @click="triggerUpload">Upload JSON</button>
-          <input
-            type="file"
-            id="file"
-            ref="file"
-            accept=".json"
-            v-on:change="uploadLayout"
-            style="display: none"
-          />
-        </span>
+  <div class="up">
+    <div class="editors-panel" ref="editorsPanelRef">
+      <div :style="[styleEditorPanel, styleLeftPanel]">
+        <JsonEditorVue
+          ref="jsonEditorRef"
+          class="json-editor"
+          v-model:mode="mode"
+          :content="layout"
+          :onChange="onLayoutChange"
+          :main-menu-bar="true"
+          :status-bar="true"
+        />
+        <div>
+          <span style="display: flex; gap: 10px">
+            <button @click="triggerUpload">Upload JSON</button>
+            <input
+              type="file"
+              id="file"
+              ref="file"
+              accept=".json"
+              v-on:change="uploadLayout"
+              style="display: none"
+            />
+          </span>
+        </div>
       </div>
-    </div>
-    <div
-      class="center-panel"
-      @mousemove="resizeMove"
-      @mouseleave="resizeMove"
-      @mousedown="(event) => { event.preventDefault(); resize.isActive = true; }"
-      @mouseup="(event) => { resize.isActive = false; }"
-    />
-    <div :style="[styleEditorPanel, styleRightPanel]">
-      <JsonEditorVue
-        class="json-editor"
-        v-model:mode="mode"
-        :content="keyboard"
-        :onChange="
-          (c) => {
-            keyboard = c;
+      <div
+        class="center-panel"
+        @mousemove="resizeMove"
+        @mouseleave="resizeMove"
+        @mousedown="
+          (event) => {
+            event.preventDefault();
+            resize.isActive = true;
           }
         "
-        :read-only="true"
-        :main-menu-bar="true"
-        :status-bar="true"
+        @mouseup="
+          (event) => {
+            resize.isActive = false;
+          }
+        "
       />
-      <div>
-        <button @click="getConvertedLayout">Download</button>
+      <div :style="[styleEditorPanel, styleRightPanel]">
+        <JsonEditorVue
+          class="json-editor"
+          v-model:mode="mode"
+          :content="keyboard"
+          :onChange="
+            (c) => {
+              keyboard = c;
+            }
+          "
+          :read-only="true"
+          :main-menu-bar="true"
+          :status-bar="true"
+        />
+        <div>
+          <button @click="getConvertedLayout">Download</button>
+        </div>
       </div>
     </div>
+  </div>
+  <div class="down">
+    <KeyboardRender :keys="keys" />
   </div>
 </template>
 

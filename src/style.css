@@ -103,7 +103,7 @@ select {
   box-sizing: border-box;
   margin: auto;
   grid-auto-columns: 1fr;
-  grid-template-rows: 3em 1fr 1fr 3em;
+  grid-template-rows: 3em auto 1fr 3em;
   gap: 20px 40px;
   grid-template-areas:
     "header"
@@ -121,4 +121,3 @@ select {
   grid-area: footer;
   text-align: center;
 }
-

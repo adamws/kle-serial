@@ -200,5 +200,6 @@ function resizeMove(event) {
   height: 400px;
   min-height: 0;
   min-width: 0;
+  margin-bottom: 5px;
 }
 </style>

@@ -20,32 +20,8 @@
   --main-theme-color: #409eff;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --backgroud-color-primary: #282828;
-    --text-primary-color: #ffffff;
-    --text-button-color: #ffffff;
-    --gray1-color: #7c6f64;
-    --gray2-color: #665c54;
-    --accent-color: #fabd2f;
-    --main-theme-color: #427b58;
-  }
-}
-
-a {
-  font-weight: 500;
-  text-decoration: inherit;
-}
-a:hover {
-  color: var(--accent-color);
-}
-
-a {
-  font-weight: 500;
-  text-decoration: inherit;
-}
-a:hover {
-  color: var(--accent-color);
+::-webkit-scrollbar {
+  display: none;
 }
 
 body,
@@ -74,25 +50,6 @@ button {
   transition: border-color 0.25s;
 }
 
-select {
-  border-radius: 8px;
-  border: 2px solid var(--main-theme-color);
-  text-align: center;
-  font-size: 1em;
-  font-family: inherit;
-  color: var(--text-primary-color);
-  background-color: var(--gray2-color);
-  cursor: pointer;
-  padding: 0.6em;
-  margin: 0;
-  box-sizing: border-box;
-  -webkit-box-sizing: border-box;
-  -moz-box-sizing: border-box;
-  -webkit-appearance: none;
-  -moz-appearance: none;
-}
-
-#modal-backdrop,
 #app {
   display: grid;
   height: 100%;

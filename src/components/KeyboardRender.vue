@@ -23,7 +23,6 @@ const props = defineProps(["keys"]);
 
 <style scoped>
 .keyboard {
-  width: 100%;
   min-height: calc(10 * 56px);
   background-color: #eeeeee;
   border-radius: 6px;

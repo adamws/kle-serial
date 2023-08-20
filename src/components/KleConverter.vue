@@ -7,7 +7,6 @@ import KeyboardRender from "./KeyboardRender.vue";
 
 const editorsPanelRef = ref(null);
 const jsonEditorRef = ref(null);
-const mode = ref("text");
 
 const layout = ref({
   json: [],
@@ -122,7 +121,6 @@ function resizeMove(event) {
         <JsonEditorVue
           ref="jsonEditorRef"
           class="json-editor"
-          v-model:mode="mode"
           :content="layout"
           :onChange="onLayoutChange"
           :main-menu-bar="true"
@@ -161,7 +159,6 @@ function resizeMove(event) {
       <div :style="[styleEditorPanel, styleRightPanel]">
         <JsonEditorVue
           class="json-editor"
-          v-model:mode="mode"
           :content="keyboard"
           :onChange="
             (c) => {

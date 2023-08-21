@@ -4,6 +4,79 @@ import FileSaver from "file-saver";
 import JsonEditorVue from "json-editor-vue";
 import * as kle from "@ijprest/kle-serial";
 import KeyboardRender from "./KeyboardRender.vue";
+import { createAjvValidator, ValidationSeverity } from "vanilla-jsoneditor";
+
+const kleSchema = {
+  $schema: "http://json-schema.org/draft-07/schema#",
+  type: "array",
+  /* metadata not supported yet
+  prefixItems: {
+    type: "object",
+    properties: {
+      author: { type: "string" },
+      backcolor: { type: "string", pattern: "^#[0-9a-f]{3}([0-9a-f]{3})?$" },
+      background: {
+        anyOf: [
+          {
+            type: "object",
+            properties: {
+              name: { type: "string" },
+              style: { type: "string" },
+            },
+            additionalProperties: false,
+          },
+          { type: "null" },
+        ],
+      },
+      name: { type: "string" },
+      notes: { type: "string" },
+      radii: { type: "string" },
+      switchBrand: { type: "string" },
+      switchMount: { type: "string" },
+      switchType: { type: "string" },
+    },
+    additionalProperties: false,
+  },
+  */
+  items: {
+    type: "array",
+    items: {
+      oneOf: [
+        {
+          type: "object",
+          properties: {
+            x: { type: "number" }, // coordinates
+            y: { type: "number" },
+            w: { type: "number" }, // dimensions
+            h: { type: "number" },
+            x2: { type: "number" }, // second coordinates
+            y2: { type: "number" },
+            w2: { type: "number" }, // second dimensions
+            h2: { type: "number" },
+            r: { type: "number" }, // rotation
+            rx: { type: "number" },
+            ry: { type: "number" },
+            l: { type: "boolean" }, // 'stepped' key
+            n: { type: "boolean" }, // 'homing' key
+            d: { type: "boolean" }, // 'decal' key
+            f: { type: "number" }, // primary font height
+            f2: { type: "number" }, // secondary font height
+            fa: { type: "array", items: { type: "number" } }, // alternative font height notation
+            c: { type: "string", pattern: "^#[0-9a-f]{3}([0-9a-f]{3})?$" }, // color of keycap
+            t: { type: "string" }, // color of text
+            g: { type: "boolean" }, // 'ghosted' key
+            a: { type: "number" }, // text alignment
+            p: { type: "string" }, // profile
+          },
+          additionalProperties: false,
+        },
+        { type: "string" },
+      ],
+    },
+  },
+};
+
+const validate = createAjvValidator({ schema: kleSchema });
 
 const editorsPanelRef = ref(null);
 const jsonEditorRef = ref(null);
@@ -47,33 +120,46 @@ function triggerUpload() {
   document.getElementById("file").click();
 }
 
-function onLayoutChange() {
-  const editor = jsonEditorRef.value.jsonEditor;
-  const content = editor.get();
+function resetKeyboard() {
+  keyboard.value.text = "";
+  keys.value = [];
+}
+
+function updateKeyboard(value) {
+  value.keys.forEach((key) => {
+    for (const prop in key) {
+      if (typeof key[prop] === "number" && !isNaN(key[prop])) {
+        key[prop] = parseFloat(key[prop].toFixed(6));
+      }
+    }
+  });
+  keyboard.value.text = JSON.stringify(value, null, 2);
+  keys.value = value.keys;
+}
+
+function validateLayout(value) {
+  const valid = validate(value);
+  if (valid.length !== 0) {
+    resetKeyboard();
+    return valid;
+  }
 
   let k = undefined;
-
   try {
-    if (content.text === undefined) {
-      k = kle.Serial.deserialize(content.json);
-    } else {
-      k = kle.Serial.parse(content.text);
-    }
+    k = kle.Serial.deserialize(value);
   } catch (error) {
-    keyboard.value.text = "";
+    resetKeyboard();
+    // kle-serial does not return json-path in error,
+    // use empty array to indicate that whole json if invalid
+    return [{ path: [], message: error, severity: ValidationSeverity.error }];
   }
 
   if (k !== undefined) {
-    k.keys.forEach((key) => {
-      for (const prop in key) {
-        if (typeof key[prop] === "number" && !isNaN(key[prop])) {
-          key[prop] = parseFloat(key[prop].toFixed(6));
-        }
-      }
-    });
-    keyboard.value.text = JSON.stringify(k, null, 2);
-    keys.value = k.keys;
+    updateKeyboard(k);
   }
+
+  // no validation error
+  return [];
 }
 
 function uploadLayout() {
@@ -122,7 +208,7 @@ function resizeMove(event) {
           ref="jsonEditorRef"
           class="json-editor"
           :content="layout"
-          :onChange="onLayoutChange"
+          :validator="validateLayout"
           :main-menu-bar="true"
           :status-bar="true"
         />

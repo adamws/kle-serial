@@ -9,70 +9,73 @@ import { createAjvValidator, ValidationSeverity } from "vanilla-jsoneditor";
 const kleSchema = {
   $schema: "http://json-schema.org/draft-07/schema#",
   type: "array",
-  /* metadata not supported yet
-  prefixItems: {
-    type: "object",
-    properties: {
-      author: { type: "string" },
-      backcolor: { type: "string", pattern: "^#[0-9a-f]{3}([0-9a-f]{3})?$" },
-      background: {
-        anyOf: [
-          {
-            type: "object",
-            properties: {
-              name: { type: "string" },
-              style: { type: "string" },
-            },
-            additionalProperties: false,
-          },
-          { type: "null" },
-        ],
-      },
-      name: { type: "string" },
-      notes: { type: "string" },
-      radii: { type: "string" },
-      switchBrand: { type: "string" },
-      switchMount: { type: "string" },
-      switchType: { type: "string" },
-    },
-    additionalProperties: false,
-  },
-  */
   items: {
-    type: "array",
-    items: {
-      oneOf: [
-        {
-          type: "object",
-          properties: {
-            x: { type: "number" }, // coordinates
-            y: { type: "number" },
-            w: { type: "number" }, // dimensions
-            h: { type: "number" },
-            x2: { type: "number" }, // second coordinates
-            y2: { type: "number" },
-            w2: { type: "number" }, // second dimensions
-            h2: { type: "number" },
-            r: { type: "number" }, // rotation
-            rx: { type: "number" },
-            ry: { type: "number" },
-            l: { type: "boolean" }, // 'stepped' key
-            n: { type: "boolean" }, // 'homing' key
-            d: { type: "boolean" }, // 'decal' key
-            f: { type: "number" }, // primary font height
-            f2: { type: "number" }, // secondary font height
-            fa: { type: "array", items: { type: "number" } }, // alternative font height notation
-            c: { type: "string", pattern: "^#[0-9a-f]{3}([0-9a-f]{3})?$" }, // color of keycap
-            t: { type: "string" }, // color of text
-            g: { type: "boolean" }, // 'ghosted' key
-            a: { type: "number" }, // text alignment
-            p: { type: "string" }, // profile
+    oneOf: [
+      { /* metadata object, would be better to handle with 'prefixItems' but that would requires
+           newer ajv with draft 2020. This does not check if this object is once at first position */
+        type: "object",
+        properties: {
+          author: { type: "string" },
+          backcolor: { type: "string", pattern: "^#[0-9a-f]{3}([0-9a-f]{3})?$" },
+          background: {
+            anyOf: [
+              {
+                type: "object",
+                properties: {
+                  name: { type: "string" },
+                  style: { type: "string" },
+                },
+                additionalProperties: false,
+              },
+              { type: "null" },
+            ],
           },
-          additionalProperties: false,
+          name: { type: "string" },
+          notes: { type: "string" },
+          radii: { type: "string" },
+          switchBrand: { type: "string" },
+          switchMount: { type: "string" },
+          switchType: { type: "string" },
         },
-        { type: "string" },
-      ],
-    },
+        additionalProperties: false,
+      },
+      {
+        type: "array",
+        items: {
+          oneOf: [
+            {
+              type: "object",
+              properties: {
+                x: { type: "number" }, // coordinates
+                y: { type: "number" },
+                w: { type: "number" }, // dimensions
+                h: { type: "number" },
+                x2: { type: "number" }, // second coordinates
+                y2: { type: "number" },
+                w2: { type: "number" }, // second dimensions
+                h2: { type: "number" },
+                r: { type: "number" }, // rotation
+                rx: { type: "number" },
+                ry: { type: "number" },
+                l: { type: "boolean" }, // 'stepped' key
+                n: { type: "boolean" }, // 'homing' key
+                d: { type: "boolean" }, // 'decal' key
+                f: { type: "number" }, // primary font height
+                f2: { type: "number" }, // secondary font height
+                fa: { type: "array", items: { type: "number" } }, // alternative font height notation
+                c: { type: "string", pattern: "^#[0-9a-f]{3}([0-9a-f]{3})?$" }, // color of keycap
+                t: { type: "string" }, // color of text
+                g: { type: "boolean" }, // 'ghosted' key
+                a: { type: "number" }, // text alignment
+                p: { type: "string" }, // profile
+              },
+              additionalProperties: false,
+            },
+            { type: "string" },
+          ],
+        },
+      },
+    ],
   },
 };
 

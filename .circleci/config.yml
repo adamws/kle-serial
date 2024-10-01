@@ -26,7 +26,7 @@ jobs:
           at: .
       - add_ssh_keys:
           fingerprints:
-            - "14:0a:96:f9:4c:a8:21:ec:3d:73:a6:01:db:99:ce:f4"
+            - "SHA256:jzxSbknVIVU5elxw1uUm4g5tVnf6rBHVxfGsWHMmrDg"
       - run:
           name: Deploy to github pages
           working_directory: dist

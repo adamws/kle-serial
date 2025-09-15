@@ -1,3 +1,6 @@
+> [!IMPORTANT]  
+> This project has been superseded by [kle-ng](https://github.com/adamws/kle-ng)
+
 # kle-serial
 
 [https://adamws.github.io/kle-serial](https://adamws.github.io/kle-serial/)

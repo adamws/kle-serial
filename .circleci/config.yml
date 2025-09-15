@@ -1,0 +1,58 @@
+version: 2.1
+
+jobs:
+  build:
+    docker:
+      - image: cimg/node:19.7.0
+    steps:
+      - checkout
+      - run: npm ci
+      - run:
+          name: Build with vite
+          command: |
+            npm run build
+      - persist_to_workspace:
+          root: .
+          paths:
+           - dist
+      - store_artifacts:
+          path: dist
+          destination: dist
+  deploy:
+    docker:
+      - image: cimg/base:2022.12
+    steps:
+      - attach_workspace:
+          at: .
+      - add_ssh_keys:
+          fingerprints:
+            - "SHA256:jzxSbknVIVU5elxw1uUm4g5tVnf6rBHVxfGsWHMmrDg"
+      - run:
+          name: Deploy to github pages
+          working_directory: dist
+          command: |
+            mkdir -p ~/.ssh
+            ssh-keyscan github.com >> ~/.ssh/known_hosts
+            mkdir .circleci
+            wget https://raw.githubusercontent.com/adamws/kle-serial/master/.circleci/config.yml -P .circleci
+            touch .nojekyll
+            git init --quiet
+            git config user.name "CircleCI"
+            git config user.email "${CIRCLE_PROJECT_USERNAME}@users.noreply.github.com"
+            git add -A
+            git commit -m "Deploy ${CIRCLE_SHA1}"
+            git push --force $CIRCLE_REPOSITORY_URL master:gh-pages
+
+workflows:
+  main:
+    jobs:
+      - build:
+          filters:
+            branches:
+              ignore: gh-pages
+      - deploy:
+          requires:
+            - build
+          filters:
+            branches:
+              only: master
